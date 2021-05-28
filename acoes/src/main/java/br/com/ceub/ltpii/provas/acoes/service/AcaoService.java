@@ -12,7 +12,7 @@ public class AcaoService {
 	private AcaoDAO acaoDAO;
 
 	public AcaoService() {
-		dadosAcoes = new ArrayList<Acao>();
+		dadosAcoes = new ArrayList<>();
 		estatisticas = new AcaoEstatistica();
 		acaoDAO = new AcaoDAO();
 	}

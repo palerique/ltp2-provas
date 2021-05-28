@@ -53,4 +53,17 @@ public class Acao {
 	public void setAdjClose(double adjClose) {
 		this.adjClose = adjClose;
 	}
+
+	@Override
+	public String toString() {
+		return "Acao{" +
+				"data=" + data +
+				", abertura=" + abertura +
+				", alta=" + alta +
+				", baixa=" + baixa +
+				", fechamento=" + fechamento +
+				", volume=" + volume +
+				", adjClose=" + adjClose +
+				'}';
+	}
 }
