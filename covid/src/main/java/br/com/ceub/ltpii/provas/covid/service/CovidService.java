@@ -6,12 +6,11 @@ import br.com.ceub.ltpii.provas.covid.infra.CovidDAO;
 import java.util.Map;
 
 public class CovidService {
+
 	private CovidDAO covidDAO;
 	private Map<String, Covid> dadosCovid;
-	private String arquivoDadosCovid;
 
-	public CovidService(String arquivoDadosCovid) {
-		this.arquivoDadosCovid = arquivoDadosCovid;
+	public CovidService() {
 		covidDAO = new CovidDAO();
 	}
 
@@ -23,12 +22,16 @@ public class CovidService {
 		this.covidDAO = covidDAO;
 	}
 
-	public void getDadosCovid() {
-		dadosCovid = getCovidDAO().getListaCovid(this.arquivoDadosCovid);
+	public void getDadosCovid(String arquivo) {
+		dadosCovid = getCovidDAO().getListaCovid(arquivo);
 	}
 
 	public CovidEstatistica getEstatistica(String pais) {
-		CovidEstatistica covidEstatistica = new CovidEstatistica( dadosCovid.get(pais));
+		CovidEstatistica covidEstatistica = new CovidEstatistica(dadosCovid.get(pais));
 		return covidEstatistica;
+	}
+
+	public void calcularEstatisticas() {
+
 	}
 }
