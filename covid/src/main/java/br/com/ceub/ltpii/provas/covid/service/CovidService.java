@@ -27,8 +27,7 @@ public class CovidService {
 	}
 
 	public CovidEstatistica getEstatistica(String pais) {
-		CovidEstatistica covidEstatistica = new CovidEstatistica(dadosCovid.get(pais));
-		return covidEstatistica;
+		return new CovidEstatistica(dadosCovid.get(pais));
 	}
 
 	public void calcularEstatisticas() {

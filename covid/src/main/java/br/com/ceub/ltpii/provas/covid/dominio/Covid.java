@@ -1,19 +1,19 @@
 package br.com.ceub.ltpii.provas.covid.dominio;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class Covid {
 
-  private final Map<Date, Double> mortes;
+  private final SortedMap<LocalDate, Long> mortes;
   private String estado;
   private String pais;
   private double latitude;
   private double longitude;
 
   public Covid() {
-    mortes = new HashMap<>();
+    mortes = new TreeMap<>(LocalDate::compareTo);
   }
 
   public String getEstado() {
@@ -48,7 +48,7 @@ public class Covid {
     this.longitude = longitude;
   }
 
-  public Map<Date, Double> getMortes() {
+  public SortedMap<LocalDate, Long> getMortes() {
     return mortes;
   }
 

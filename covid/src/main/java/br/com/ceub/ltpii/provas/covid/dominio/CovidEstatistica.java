@@ -1,17 +1,17 @@
 package br.com.ceub.ltpii.provas.covid.dominio;
 
-import java.util.Arrays;
+import java.time.LocalDate;
 
 public class CovidEstatistica {
 
   private static String[] cabecalho;
-  private double totalMortes;
+  private long totalMortes;
   private double mediaMortes;
   private double stdMortes;
-  private double diaMaisMortes;
-  private double diaMenosMortes;
-  private String dataMaisMortes;
-  private String dataMenosMortes;
+  private long mortesNoPiorDia;
+  private long mortesNoMelhorDia;
+  private LocalDate dataMaisMortes;
+  private LocalDate dataMenosMortes;
   private Covid covid;
 
   public CovidEstatistica(Covid covid) {
@@ -28,23 +28,50 @@ public class CovidEstatistica {
   }
 
   private void calcularIndicadoresEstatisticos() {
-    int quantidadeDias = this.covid.getMortes().size();
-    double morteDia = 0, morteProximoDia = 0, morteDiaHoje = 0;
+    if (this.covid != null) {
+      this.totalMortes = this.covid.getMortes().get(this.covid.getMortes().lastKey());
+      this.dataMenosMortes = this.covid.getMortes().firstKey();
 
-    for (int i = 0; i < quantidadeDias - 1; i++) {
+      //2,0 pontos a.3) Média de mortes
+      this.mediaMortes = totalMortes / (double) this.covid.getMortes().size();
 
-      morteDiaHoje = this.covid.getMortes().get(i);
-      morteProximoDia = this.covid.getMortes().get(i + 1);
-      morteDia = morteProximoDia - morteDiaHoje;
-      this.totalMortes += morteDia;
+      this.covid.getMortes().forEach((data, totalDeMortesAteEsseDia) -> {
+        Long totalDeMortesAteOProximoDia = this.covid.getMortes().get(data.plusDays(1));
+        long morteApenasNesseDia;
+        if (totalDeMortesAteOProximoDia == null) {
+          Long totalDeMortesAteODiaAnterior = this.covid.getMortes().get(data.minusDays(1));
+          morteApenasNesseDia = totalDeMortesAteEsseDia - totalDeMortesAteODiaAnterior;
+        } else {
+          morteApenasNesseDia = totalDeMortesAteOProximoDia - totalDeMortesAteEsseDia;
+        }
+
+        //1,0 pontos a.2) quantidade máxima de mortes
+        //2,0 pontos a.2) Data com mais mortes
+        if (this.getMortesNoPiorDia() < morteApenasNesseDia) {
+          this.setMortesNoPiorDia(morteApenasNesseDia);
+          this.setDataMaisMortes(data);
+        }
+
+        //1,0 pontos a.1) quantidade mínima de mortes
+        //2,0 pontos a.1) Data com menos mortes
+        if (this.getMortesNoMelhorDia() > morteApenasNesseDia) {
+          this.setMortesNoMelhorDia(morteApenasNesseDia);
+          this.setDataMenosMortes(data);
+        }
+
+        this.setStdMortes(this.getStdMortes() + Math.pow(morteApenasNesseDia, 2));
+      });
+
+      //2,0 pontos a.4) Desvio padrão de mortes
+      this.setStdMortes(Math.sqrt(this.getStdMortes() / this.covid.getMortes().size()));
     }
   }
 
-  public double getTotalMortes() {
+  public long getTotalMortes() {
     return totalMortes;
   }
 
-  public void setTotalMortes(double totalMortes) {
+  public void setTotalMortes(long totalMortes) {
     this.totalMortes = totalMortes;
   }
 
@@ -64,35 +91,35 @@ public class CovidEstatistica {
     this.stdMortes = stdMortes;
   }
 
-  public double getDiaMaisMortes() {
-    return diaMaisMortes;
+  public long getMortesNoPiorDia() {
+    return mortesNoPiorDia;
   }
 
-  public void setDiaMaisMortes(double diaMaisMortes) {
-    this.diaMaisMortes = diaMaisMortes;
+  public void setMortesNoPiorDia(long mortesNoPiorDia) {
+    this.mortesNoPiorDia = mortesNoPiorDia;
   }
 
-  public double getDiaMenosMortes() {
-    return diaMenosMortes;
+  public long getMortesNoMelhorDia() {
+    return mortesNoMelhorDia;
   }
 
-  public void setDiaMenosMortes(double diaMenosMortes) {
-    this.diaMenosMortes = diaMenosMortes;
+  public void setMortesNoMelhorDia(long mortesNoMelhorDia) {
+    this.mortesNoMelhorDia = mortesNoMelhorDia;
   }
 
-  public String getDataMaisMortes() {
+  public LocalDate getDataMaisMortes() {
     return dataMaisMortes;
   }
 
-  public void setDataMaisMortes(String dataMaisMortes) {
+  public void setDataMaisMortes(LocalDate dataMaisMortes) {
     this.dataMaisMortes = dataMaisMortes;
   }
 
-  public String getDataMenosMortes() {
+  public LocalDate getDataMenosMortes() {
     return dataMenosMortes;
   }
 
-  public void setDataMenosMortes(String dataMenosMortes) {
+  public void setDataMenosMortes(LocalDate dataMenosMortes) {
     this.dataMenosMortes = dataMenosMortes;
   }
 
@@ -107,14 +134,13 @@ public class CovidEstatistica {
   @Override
   public String toString() {
     return "CovidEstatistica{" +
-        "cabecalho=" + Arrays.toString(cabecalho) +
-        ", totalMortes=" + totalMortes +
+        "totalMortes=" + totalMortes +
         ", mediaMortes=" + mediaMortes +
         ", stdMortes=" + stdMortes +
-        ", diaMaisMortes=" + diaMaisMortes +
-        ", diaMenosMortes=" + diaMenosMortes +
-        ", dataMaisMortes='" + dataMaisMortes + '\'' +
-        ", dataMenosMortes='" + dataMenosMortes + '\'' +
+        ", mortesNoPiorDia=" + mortesNoPiorDia +
+        ", mortesNoMelhorDia=" + mortesNoMelhorDia +
+        ", dataMaisMortes=" + dataMaisMortes +
+        ", dataMenosMortes=" + dataMenosMortes +
         ", covid=" + covid +
         '}';
   }

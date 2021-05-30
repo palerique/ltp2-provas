@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -18,12 +20,11 @@ public class CovidDAO {
 
   public static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yy");
   public static final String SEPARADOR = ",";
+  public static final String REGEX_SEPARADOR = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
 
   private Covid getCovid(String linhaArquivo) {
-    //TODO: resolver o problema da "Korea, South" e o split nas virgulas!
     Covid covid = new Covid();
-    String[] vetor = linhaArquivo.split(SEPARADOR);
-    System.out.println(linhaArquivo);
+    String[] vetor = linhaArquivo.split(REGEX_SEPARADOR, -1);
     for (int i = 0; i < vetor.length; i++) {
       String celula = vetor[i];
       if (celula != null && !celula.isEmpty()) {
@@ -37,9 +38,12 @@ public class CovidDAO {
           covid.setLongitude(Double.parseDouble(celula));
         } else {
           try {
+            Date parsed = SIMPLE_DATE_FORMAT.parse(CovidEstatistica.getCabecalho()[i]);
             covid.getMortes().put(
-                SIMPLE_DATE_FORMAT.parse(CovidEstatistica.getCabecalho()[i]),
-                Double.valueOf(celula)
+                parsed.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate(),
+                Long.valueOf(celula)
             );
           } catch (ParseException e) {
             e.printStackTrace();
@@ -62,7 +66,6 @@ public class CovidDAO {
     ) {
       AtomicInteger index = new AtomicInteger();
       linhas.forEach(linha -> {
-        System.out.println(linha);
         if (index.get() == 0) {
           CovidEstatistica.setCabecalho(linha.split(SEPARADOR));
         } else {
