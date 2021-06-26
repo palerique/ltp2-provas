@@ -20,7 +20,7 @@ public class Covid {
     return estado;
   }
 
-  public void setEstado(String estado) {
+  public void setEstado(final String estado) {
     this.estado = estado;
   }
 
@@ -28,7 +28,7 @@ public class Covid {
     return pais;
   }
 
-  public void setPais(String pais) {
+  public void setPais(final String pais) {
     this.pais = pais;
   }
 
@@ -36,7 +36,7 @@ public class Covid {
     return latitude;
   }
 
-  public void setLatitude(double latitude) {
+  public void setLatitude(final double latitude) {
     this.latitude = latitude;
   }
 
@@ -44,7 +44,7 @@ public class Covid {
     return longitude;
   }
 
-  public void setLongitude(double longitude) {
+  public void setLongitude(final double longitude) {
     this.longitude = longitude;
   }
 

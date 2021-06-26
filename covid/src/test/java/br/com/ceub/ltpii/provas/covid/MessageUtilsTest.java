@@ -4,7 +4,7 @@
 package br.com.ceub.ltpii.provas.covid;
 
 public class MessageUtilsTest {
-    //    @Test public void testGetMessage() {
-    //        assertEquals("Hello      World!", MessageUtils.getMessage());
-    //    }
+  //    @Test public void testGetMessage() {
+  //        assertEquals("Hello      World!", MessageUtils.getMessage());
+  //    }
 }

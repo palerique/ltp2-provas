@@ -14,7 +14,7 @@ public class CovidEstatistica {
   private LocalDate dataMenosMortes;
   private Covid covid;
 
-  public CovidEstatistica(Covid covid) {
+  public CovidEstatistica(final Covid covid) {
     this.covid = covid;
     calcularIndicadoresEstatisticos();
   }
@@ -23,23 +23,23 @@ public class CovidEstatistica {
     return cabecalho;
   }
 
-  public static void setCabecalho(String[] cabecalho) {
+  public static void setCabecalho(final String[] cabecalho) {
     CovidEstatistica.cabecalho = cabecalho;
   }
 
   private void calcularIndicadoresEstatisticos() {
-    if (this.covid != null) {
-      this.totalMortes = this.covid.getMortes().get(this.covid.getMortes().lastKey());
-      this.dataMenosMortes = this.covid.getMortes().firstKey();
+    if (covid != null) {
+      totalMortes = covid.getMortes().get(covid.getMortes().lastKey());
+      dataMenosMortes = covid.getMortes().firstKey();
 
       //2,0 pontos a.3) Média de mortes
-      this.mediaMortes = totalMortes / (double) this.covid.getMortes().size();
+      mediaMortes = totalMortes / (double) covid.getMortes().size();
 
-      this.covid.getMortes().forEach((data, totalDeMortesAteEsseDia) -> {
-        Long totalDeMortesAteOProximoDia = this.covid.getMortes().get(data.plusDays(1));
-        long morteApenasNesseDia;
+      covid.getMortes().forEach((data, totalDeMortesAteEsseDia) -> {
+        final Long totalDeMortesAteOProximoDia = covid.getMortes().get(data.plusDays(1));
+        final long morteApenasNesseDia;
         if (totalDeMortesAteOProximoDia == null) {
-          Long totalDeMortesAteODiaAnterior = this.covid.getMortes().get(data.minusDays(1));
+          final Long totalDeMortesAteODiaAnterior = covid.getMortes().get(data.minusDays(1));
           morteApenasNesseDia = totalDeMortesAteEsseDia - totalDeMortesAteODiaAnterior;
         } else {
           morteApenasNesseDia = totalDeMortesAteOProximoDia - totalDeMortesAteEsseDia;
@@ -47,23 +47,23 @@ public class CovidEstatistica {
 
         //1,0 pontos a.2) quantidade máxima de mortes
         //2,0 pontos a.2) Data com mais mortes
-        if (this.getMortesNoPiorDia() < morteApenasNesseDia) {
-          this.setMortesNoPiorDia(morteApenasNesseDia);
-          this.setDataMaisMortes(data);
+        if (getMortesNoPiorDia() < morteApenasNesseDia) {
+          setMortesNoPiorDia(morteApenasNesseDia);
+          setDataMaisMortes(data);
         }
 
         //1,0 pontos a.1) quantidade mínima de mortes
         //2,0 pontos a.1) Data com menos mortes
-        if (this.getMortesNoMelhorDia() > morteApenasNesseDia) {
-          this.setMortesNoMelhorDia(morteApenasNesseDia);
-          this.setDataMenosMortes(data);
+        if (getMortesNoMelhorDia() > morteApenasNesseDia) {
+          setMortesNoMelhorDia(morteApenasNesseDia);
+          setDataMenosMortes(data);
         }
 
-        this.setStdMortes(this.getStdMortes() + Math.pow(morteApenasNesseDia, 2));
+        setStdMortes(getStdMortes() + Math.pow(morteApenasNesseDia, 2));
       });
 
       //2,0 pontos a.4) Desvio padrão de mortes
-      this.setStdMortes(Math.sqrt(this.getStdMortes() / this.covid.getMortes().size()));
+      setStdMortes(Math.sqrt(getStdMortes() / covid.getMortes().size()));
     }
   }
 
@@ -71,7 +71,7 @@ public class CovidEstatistica {
     return totalMortes;
   }
 
-  public void setTotalMortes(long totalMortes) {
+  public void setTotalMortes(final long totalMortes) {
     this.totalMortes = totalMortes;
   }
 
@@ -79,7 +79,7 @@ public class CovidEstatistica {
     return mediaMortes;
   }
 
-  public void setMediaMortes(double mediaMortes) {
+  public void setMediaMortes(final double mediaMortes) {
     this.mediaMortes = mediaMortes;
   }
 
@@ -87,7 +87,7 @@ public class CovidEstatistica {
     return stdMortes;
   }
 
-  public void setStdMortes(double stdMortes) {
+  public void setStdMortes(final double stdMortes) {
     this.stdMortes = stdMortes;
   }
 
@@ -95,7 +95,7 @@ public class CovidEstatistica {
     return mortesNoPiorDia;
   }
 
-  public void setMortesNoPiorDia(long mortesNoPiorDia) {
+  public void setMortesNoPiorDia(final long mortesNoPiorDia) {
     this.mortesNoPiorDia = mortesNoPiorDia;
   }
 
@@ -103,7 +103,7 @@ public class CovidEstatistica {
     return mortesNoMelhorDia;
   }
 
-  public void setMortesNoMelhorDia(long mortesNoMelhorDia) {
+  public void setMortesNoMelhorDia(final long mortesNoMelhorDia) {
     this.mortesNoMelhorDia = mortesNoMelhorDia;
   }
 
@@ -111,7 +111,7 @@ public class CovidEstatistica {
     return dataMaisMortes;
   }
 
-  public void setDataMaisMortes(LocalDate dataMaisMortes) {
+  public void setDataMaisMortes(final LocalDate dataMaisMortes) {
     this.dataMaisMortes = dataMaisMortes;
   }
 
@@ -119,7 +119,7 @@ public class CovidEstatistica {
     return dataMenosMortes;
   }
 
-  public void setDataMenosMortes(LocalDate dataMenosMortes) {
+  public void setDataMenosMortes(final LocalDate dataMenosMortes) {
     this.dataMenosMortes = dataMenosMortes;
   }
 
@@ -127,7 +127,7 @@ public class CovidEstatistica {
     return covid;
   }
 
-  public void setCovid(Covid covid) {
+  public void setCovid(final Covid covid) {
     this.covid = covid;
   }
 

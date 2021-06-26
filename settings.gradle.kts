@@ -8,4 +8,4 @@
  */
 
 rootProject.name = "provas"
-include("acoes", "covid")
+include("acoes", "covid", "xadrez")

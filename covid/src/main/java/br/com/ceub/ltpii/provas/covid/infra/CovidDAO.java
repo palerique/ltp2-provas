@@ -22,11 +22,11 @@ public class CovidDAO {
   public static final String SEPARADOR = ",";
   public static final String REGEX_SEPARADOR = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
 
-  private Covid getCovid(String linhaArquivo) {
-    Covid covid = new Covid();
-    String[] vetor = linhaArquivo.split(REGEX_SEPARADOR, -1);
+  private Covid getCovid(final String linhaArquivo) {
+    final Covid covid = new Covid();
+    final String[] vetor = linhaArquivo.split(REGEX_SEPARADOR, -1);
     for (int i = 0; i < vetor.length; i++) {
-      String celula = vetor[i];
+      final String celula = vetor[i];
       if (celula != null && !celula.isEmpty()) {
         if (i == 0) {
           covid.setEstado(celula);
@@ -38,14 +38,14 @@ public class CovidDAO {
           covid.setLongitude(Double.parseDouble(celula));
         } else {
           try {
-            Date parsed = SIMPLE_DATE_FORMAT.parse(CovidEstatistica.getCabecalho()[i]);
+            final Date parsed = SIMPLE_DATE_FORMAT.parse(CovidEstatistica.getCabecalho()[i]);
             covid.getMortes().put(
                 parsed.toInstant()
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate(),
                 Long.valueOf(celula)
             );
-          } catch (ParseException e) {
+          } catch (final ParseException e) {
             e.printStackTrace();
           }
         }
@@ -54,27 +54,27 @@ public class CovidDAO {
     return covid;
   }
 
-  public Map<String, Covid> getListaCovid(String caminhoArquivo) {
-    Map<String, Covid> mapaCovid = new HashMap<>();
+  public Map<String, Covid> getListaCovid(final String caminhoArquivo) {
+    final Map<String, Covid> mapaCovid = new HashMap<>();
     try (
-        InputStream inputStream = Thread.currentThread().getContextClassLoader()
+        final InputStream inputStream = Thread.currentThread().getContextClassLoader()
             .getResourceAsStream(caminhoArquivo);
-        InputStreamReader inputStreamReader = new InputStreamReader(
+        final InputStreamReader inputStreamReader = new InputStreamReader(
             Objects.requireNonNull(inputStream));
-        BufferedReader br = new BufferedReader(inputStreamReader);
-        Stream<String> linhas = br.lines()
+        final BufferedReader br = new BufferedReader(inputStreamReader);
+        final Stream<String> linhas = br.lines()
     ) {
-      AtomicInteger index = new AtomicInteger();
+      final AtomicInteger index = new AtomicInteger();
       linhas.forEach(linha -> {
         if (index.get() == 0) {
           CovidEstatistica.setCabecalho(linha.split(SEPARADOR));
         } else {
-          Covid covidDto = getCovid(linha);
+          final Covid covidDto = getCovid(linha);
           mapaCovid.put(covidDto.getPais(), covidDto);
         }
         index.getAndIncrement();
       });
-    } catch (IOException e) {
+    } catch (final IOException e) {
       e.printStackTrace();
     }
     return mapaCovid;

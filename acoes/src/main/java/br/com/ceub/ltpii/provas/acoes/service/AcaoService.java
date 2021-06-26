@@ -1,29 +1,29 @@
 package br.com.ceub.ltpii.provas.acoes.service;
 
 import br.com.ceub.ltpii.provas.acoes.dominio.Acao;
+import br.com.ceub.ltpii.provas.acoes.infra.AcaoDAO;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.ceub.ltpii.provas.acoes.infra.AcaoDAO;
-
 public class AcaoService {
-	private List<Acao> dadosAcoes;
-	private AcaoEstatistica estatisticas;
-	private AcaoDAO acaoDAO;
 
-	public AcaoService() {
-		dadosAcoes = new ArrayList<>();
-		estatisticas = new AcaoEstatistica();
-		acaoDAO = new AcaoDAO();
-	}
+  private final AcaoDAO acaoDAO;
+  private List<Acao> dadosAcoes;
+  private AcaoEstatistica estatisticas;
 
-	public List<Acao> obterAcoes(String nomeArquivo) {
-		dadosAcoes = acaoDAO.csv(nomeArquivo);
-		return dadosAcoes;
-	}
+  public AcaoService() {
+    dadosAcoes = new ArrayList<>();
+    estatisticas = new AcaoEstatistica();
+    acaoDAO = new AcaoDAO();
+  }
 
-	public AcaoEstatistica obterEstatisticas() {
-		this.estatisticas = estatisticas.calcular(dadosAcoes);
-		return estatisticas;
-	}
+  public List<Acao> obterAcoes(final String nomeArquivo) {
+    dadosAcoes = acaoDAO.csv(nomeArquivo);
+    return dadosAcoes;
+  }
+
+  public AcaoEstatistica obterEstatisticas() {
+    estatisticas = estatisticas.calcular(dadosAcoes);
+    return estatisticas;
+  }
 }
